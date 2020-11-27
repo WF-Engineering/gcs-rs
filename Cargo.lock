@@ -793,10 +793,11 @@ dependencies = [
 
 [[package]]
 name = "gcs-rs"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "actix-rt",
  "actix-web",
+ "bytes",
  "chrono",
  "dotenv",
  "env_logger",

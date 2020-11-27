@@ -1,16 +1,11 @@
 #[macro_use]
 extern crate log;
 
-mod api;
-mod api_error;
-mod config;
-mod resp;
-
 use actix_web::{middleware, web, App, HttpServer};
 use dotenv::dotenv;
 use std::io;
 
-use config::{Config, Env};
+use gcs_rs::{api, Config, Env};
 
 #[actix_rt::main]
 async fn main() -> io::Result<()> {
