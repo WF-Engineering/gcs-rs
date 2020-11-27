@@ -21,14 +21,8 @@ pub enum ApiError {
   #[error("GCS response is not in 200 ..< 300, {0:?}")]
   NotSuccessResponse(hyper::client::Response),
 
-  #[error("Failed to serialize cause: {0:?}")]
-  SerializeError(serde_json::Error),
-}
-
-impl From<serde_json::Error> for ApiError {
-  fn from(v: serde_json::Error) -> Self {
-    ApiError::SerializeError(v)
-  }
+  #[error("Failed to find filename by [{0:?}]")]
+  MissingFilename(String),
 }
 
 impl From<hyper::client::Response> for ApiError {
@@ -60,7 +54,7 @@ impl ResponseError for ApiError {
       ApiError::MimeTypeParsingError => HttpResponse::BadRequest(),
       ApiError::UploadObjectError(_) => HttpResponse::InternalServerError(),
       ApiError::NotSuccessResponse(_) => HttpResponse::InternalServerError(),
-      ApiError::SerializeError(_) => HttpResponse::InternalServerError(),
+      ApiError::MissingFilename(_) => HttpResponse::InternalServerError(),
     }
     .body(self.to_string())
   }

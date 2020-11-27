@@ -2,7 +2,7 @@ use actix_web::{web, HttpRequest, HttpResponse};
 use google_storage1::{Object, Storage};
 use hyper::net::HttpsConnector;
 use hyper_rustls::TlsClient;
-use std::{fs, io::prelude::*};
+use std::{fs, io::prelude::*, path::Path};
 use yup_oauth2 as oauth2;
 
 use super::{api_error::ApiError, config::Config};
@@ -30,7 +30,9 @@ pub async fn upload_object(
     .and_then(|h| h.to_str().ok())
     .ok_or(ApiError::MissingHeader("Mime-Type"))?;
 
-  let saved_path = name;
+  let saved_path = Path::new(name)
+    .file_name()
+    .ok_or(ApiError::MissingFilename(name.to_string()))?;
 
   let mut file = fs::File::create(saved_path)?;
   file.write_all(&payload)?;
@@ -56,10 +58,6 @@ pub async fn upload_object(
 
   if response.status.is_success() {
     Ok(HttpResponse::Ok().json(object))
-  // let bytes = serde_json::to_vec(&object)?;
-  // let resp = serde_json::from_slice::<ImageResponse>(&bytes)?;
-
-  // Ok(HttpResponse::Ok().json(resp))
   } else {
     Err(ApiError::NotSuccessResponse(response))
   }
