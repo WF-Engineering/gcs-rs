@@ -1,0 +1,18 @@
+[package]
+name = "gcs-client"
+version = "0.1.0"
+authors = ["Arco Hsieh <yiyezhihen@gmail.com>"]
+edition = "2018"
+license = "MIT"
+keywords = ["gcs", "api"]
+description = "The unofficial GCS API client in Rust"
+homepage = "https://github.com/WF-Engineering/gcs-rs"
+repository = "https://github.com/WF-Engineering/gcs-rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = "2.0.0"
+bytes = "0.5.6"
+chrono = { version = "0.4.10", features = ["serde"] }
+serde = "^1.0"

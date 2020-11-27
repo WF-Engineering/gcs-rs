@@ -5,7 +5,7 @@ use hyper_rustls::TlsClient;
 use std::{fs, io::prelude::*};
 use yup_oauth2 as oauth2;
 
-use super::{api_error::ApiError, config::Config, resp::ImageResponse};
+use super::{api_error::ApiError, config::Config};
 
 pub async fn upload_object(
   request: HttpRequest,
@@ -55,10 +55,11 @@ pub async fn upload_object(
   fs::remove_file(saved_path)?;
 
   if response.status.is_success() {
-    let bytes = serde_json::to_vec(&object)?;
-    let resp = serde_json::from_slice::<ImageResponse>(&bytes)?;
+    Ok(HttpResponse::Ok().json(object))
+  // let bytes = serde_json::to_vec(&object)?;
+  // let resp = serde_json::from_slice::<ImageResponse>(&bytes)?;
 
-    Ok(HttpResponse::Ok().json(resp))
+  // Ok(HttpResponse::Ok().json(resp))
   } else {
     Err(ApiError::NotSuccessResponse(response))
   }

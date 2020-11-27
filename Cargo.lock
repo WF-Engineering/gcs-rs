@@ -792,8 +792,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "gcs-rs"
-version = "0.1.1"
+name = "gcs-client"
+version = "0.1.0"
+dependencies = [
+ "actix-web",
+ "bytes",
+ "chrono",
+ "serde",
+]
+
+[[package]]
+name = "gcs-server"
+version = "0.1.2"
 dependencies = [
  "actix-rt",
  "actix-web",
