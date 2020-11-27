@@ -1,0 +1,3 @@
+/target
+.env
+bucket-service-account-key.json
