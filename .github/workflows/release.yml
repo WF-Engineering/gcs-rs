@@ -1,0 +1,33 @@
+name: Release GCS Server
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-gcs-server:
+    name: Build GCS Server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup GCP CLI
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: "290.0.1"
+          service_account_key: ${{ secrets.GCE_SA_KEY }}
+          project_id: ${{ secrets.GCE_PROJECT }}
+
+      - name: Configure Docker
+        run: |-
+          gcloud --quiet auth configure-docker
+
+      - name: Build and Publish API Server
+        run: |-
+          cargo generate-lockfile
+          VERSION="v$(cargo pkgid --manifest-path ./gcs-server/Cargo.toml | cut -d'#' -f2)"
+          IMAGE="asia.gcr.io/${{ secrets.GCE_PROJECT }}/gcs-server:$VERSION"
+          docker build -f Dockerfile --tag "$IMAGE" .
+          docker push "$IMAGE"
